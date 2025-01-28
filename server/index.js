@@ -14,7 +14,7 @@ const server = http.createServer(app);
 // Configuration Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://chaton-s8rx.onrender.com',
     methods: ['GET', 'POST'],
     credentials: true
   }
