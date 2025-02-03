@@ -12,6 +12,10 @@ Un mini-IRC complet avec :
 - Auto-complétion des commandes (avec suggestions)
 - 5 tests unitaires sur l'API REST, etc.
 
+## Access the Project Online
+
+https://chat-on-chatroom.vercel.app/
+
 
 ## Technologies 📱
 
