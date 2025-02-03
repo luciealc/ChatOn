@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import io from "socket.io-client";
 import { NicknameContext } from '../context/NicknameContext';
 
-const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:3003");
+// const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:3003");
+const socket = io(process.env.REACT_APP_SERVER_URL || "https://chaton-ghox.onrender.com");
 
 function GuestLogin() {
   const [nicknameInput, setNicknameInput] = useState('');

@@ -18,7 +18,8 @@ const COMMANDS = [
 ];
 
 // Par défaut, le serveur est sur localhost:3003
-const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:3003");
+// const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:3003");
+const socket = io(process.env.REACT_APP_SERVER_URL || "https://chaton-ghox.onrender.com");
 
 function ChatPage() {
   // States IRC
