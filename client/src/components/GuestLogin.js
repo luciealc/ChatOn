@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import io from "socket.io-client";
 import { NicknameContext } from '../context/NicknameContext';
 
-const socket = io(process.env.REACT_APP_SERVER_URL || "https://chaton-s8rx.onrender.com");
+const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:3003");
 
 function GuestLogin() {
   const [nicknameInput, setNicknameInput] = useState('');
@@ -13,11 +13,8 @@ function GuestLogin() {
   const handleGuestLogin = (e) => {
     e.preventDefault();
     if (nicknameInput.trim()) {
-      socket.emit('setNickname', nicknameInput);
-      socket.on('nicknameSet', (nick) => {
-        setNickname(nick); // Met à jour le contexte avec le pseudonyme
+        setNickname(nicknameInput); // Met à jour le contexte avec le pseudonyme
         navigate('/chat'); // Redirige vers la page de chat après la connexion
-      });
     } else {
       alert('Please enter a nickname');
     }

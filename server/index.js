@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
         await user.save();
       }
       activeUsers[socket.id] = user;
+      console.log('Active Users:', activeUsers);
       socket.emit('nicknameSet', user.nickname);
       console.log(`[${socket.id}] => Nickname: ${user.nickname}`);
     } catch (error) {
@@ -92,6 +93,7 @@ io.on('connection', (socket) => {
       socket.emit('error', 'Could not delete channel');
     }
   });
+
   // /join
   socket.on('joinChannel', async (channelName) => {
     try {

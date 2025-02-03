@@ -18,11 +18,12 @@ const COMMANDS = [
 ];
 
 // Par défaut, le serveur est sur localhost:3003
-const socket = io(process.env.REACT_APP_SERVER_URL || "https://chaton-s8rx.onrender.com");
+const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:3003");
 
 function ChatPage() {
   // States IRC
   const { nickname, setNickname } = useContext(NicknameContext);
+  console.log("NicknameContext -- chatpage:", nickname);
   const [channels, setChannels] = useState([]);
   const [joinedChannels, setJoinedChannels] = useState([]);
   const [activeChannel, setActiveChannel] = useState("");
@@ -34,11 +35,12 @@ function ChatPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredCommands, setFilteredCommands] = useState([]);
 
-  const handleChangeNickname = (newNickname) => {
-    setNickname(newNickname);
-    // Émettez l'événement pour changer le pseudonyme sur le serveur
-    socket.emit('setNickname', newNickname);
-  };
+  useEffect(() => {
+    if (nickname) {
+      // Émettre le pseudonyme au serveur
+      socket.emit('setNickname', nickname);
+    }
+  }, [nickname]);
 
   useEffect(() => {
     // Socket events
@@ -46,8 +48,8 @@ function ChatPage() {
       console.log("Connected =>", socket.id);
     });
 
-    socket.on("nicknameSet", (nick) => {
-      setNickname(nick);
+    socket.on("nicknameSet", (nickname) => {
+      setNickname(nickname);
     });
 
     socket.on("channelList", (channelNames) => {
@@ -68,15 +70,16 @@ function ChatPage() {
       addSystemMessage(channelName, `Channel "${channelName}" deleted.`);
     });
 
-    socket.on("userJoined", (nick) => {
+    socket.on("userJoined", (nickname) => {
+        console.log(`${nickname} joined the channel`);
       if (activeChannel) {
-        addSystemMessage(activeChannel, `${nick} joined the channel`);
+        addSystemMessage(activeChannel, `${nickname} joined the channel`);
       }
     });
 
-    socket.on("userLeft", (nick) => {
+    socket.on("userLeft", (nickname) => {
       if (activeChannel) {
-        addSystemMessage(activeChannel, `${nick} left the channel`);
+        addSystemMessage(activeChannel, `${nickname} left the channel`);
       }
     });
 
@@ -184,6 +187,8 @@ function ChatPage() {
           }
           socket.emit("quitChannel", ch);
           setJoinedChannels((prev) => prev.filter((c) => c !== ch));
+          // Add the channel back to available channels
+          setChannels(prev => [...prev, ch]);
           if (activeChannel === ch) {
             setActiveChannel("");
           }
@@ -369,7 +374,6 @@ function ChatPage() {
           <span className="font-bold">Nickname: </span>
           <span>{nickname || "(none)"}</span>
         </div>
-        
       </aside>
 
       {/* Zone de chat principale */}
@@ -386,8 +390,8 @@ function ChatPage() {
               className={`mb-2 p-2 max-w-xs rounded-lg ${msg.user === "SYSTEM"
                 ? "bg-yellow-400 text-black"
                 : msg.user === nickname
-                  ? "bg-[#5661F6] text-white"
-                  : "bg-gray-300 text-black"
+                  ? "bg-gray-300 text-black"
+                  : "bg-[#5661F6] text-white"
                 }`}
             >
               <strong>{msg.user}: </strong>
