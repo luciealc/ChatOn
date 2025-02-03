@@ -14,7 +14,7 @@ const server = http.createServer(app);
 // Configuration Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: 'https://chat-on-chatroom.vercel.app/',
+    origin: 'https://chat-on-chatroom.vercel.app',
     methods: ['GET', 'POST'],
     credentials: true
   }
